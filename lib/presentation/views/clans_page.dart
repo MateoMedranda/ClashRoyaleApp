@@ -41,61 +41,23 @@ class ClansPage extends StatelessWidget {
                 child: CircularProgressIndicator(color: Color(0xFF1976D2)),
               )
             : SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Builder(builder: (context) {
+                  final double bottomInset = MediaQuery.of(context).padding.bottom + 12.0;
+                  return ListView.builder(
+                    padding: EdgeInsets.fromLTRB(12.0, 8.0, 12.0, bottomInset),
                     itemCount: vm.items.length,
                     itemBuilder: (context, i) {
                       final clan = vm.items[i];
-
-                      // derive a pleasant color from badgeId
-                      final int colorSeed = clan.badgeId;
-                      final int raw = (colorSeed * 9973) & 0x00FFFFFF;
-                      final Color rowColor = Color(0xFF000000 | raw).withOpacity(1.0);
-
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 10.0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                          tileColor: rowColor.withOpacity(0.08),
-                          leading: CircleAvatar(
-                            backgroundColor: rowColor,
-                            child: const Text('🎯', style: TextStyle(fontSize: 18)),
-                          ),
-                          title: Text(clan.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(clan.tag),
-                              const SizedBox(height: 4),
-                              Text(
-                                clan.location != null && clan.location!['name'] != null
-                                    ? clan.location!['name']
-                                    : 'Sin ubicación',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('${clan.members}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                              const SizedBox(height: 4),
-                              Text('Pts ${clan.clanScore}', style: const TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                          onTap: () {
-                            // placeholder for detail navigation later
-                          },
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: SizedBox(
+                          height: 150,
+                          child: ClanWidget(clan: clan),
                         ),
                       );
                     },
-                  ),
-                ),
-              ),
+                  );
+                })),
       ),
     );
   }
