@@ -36,8 +36,14 @@ class CardsPage extends StatelessWidget {
           },
         ),
       ),
+ //solo lo agregue para probar la navegacion, saludos
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Ver clanes',
+        backgroundColor: Colors.blue[900],
+        child: const Icon(Icons.group),
+        onPressed: () => Navigator.pushNamed(context, '/clans'),
+      ),
 
-      bottomNavigationBar: null,
     );
   }
 }

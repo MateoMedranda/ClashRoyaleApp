@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'data/repositories/clash_datasource.dart';
 import 'data/repositories/card_repository.dart';
+import 'data/repositories/clash_clans_datasource.dart';
+import 'data/repositories/clan_repository.dart';
 import 'domain/usecases/get_cards_data_usecase.dart';
 import 'presentation/viewmodels/card_viewmodel.dart';
+import 'presentation/viewmodels/clan_viewmodel.dart';
 import 'presentation/routes/app_routes.dart';
 
 void main() {
   final datasource = ClashRoyaleSource();
   final repository = CardsRepository(datasource);
   final useCase = GetCardsDataUseCase(repository);
+  final clansDatasource = ClashClansSource();
+  final clansRepository = ClansRepository(clansDatasource);
+  final clansUseCase = GetCardsDataUseCase(clansRepository);
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => CardViewModel(useCase)..loadData(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ClanViewModel(clansUseCase)..loadData(),
         ),
       ],
       child: MaterialApp(
