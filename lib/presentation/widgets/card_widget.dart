@@ -27,7 +27,7 @@ class CardWidget extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Image.network(
                     card.images.isNotEmpty ? card.images[0] : '',
                     fit: BoxFit.contain,
