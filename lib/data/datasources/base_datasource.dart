@@ -1,3 +1,3 @@
 abstract class BaseDataSource<T>{
-  Future<List<T>> fetchData();
+  Future<List<T>> fetchCardsData();
 }

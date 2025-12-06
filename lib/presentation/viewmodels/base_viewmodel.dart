@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/base_entity.dart';
-import '../../domain/usecases/get_data_usecase.dart';
+import '../../domain/usecases/get_cards_data_usecase.dart';
 
 class BaseViewModel<T extends BaseEntity> extends ChangeNotifier {
-  final GetDataUseCase<T> useCase;
+  final GetCardsDataUseCase<T> useCase;
 
   BaseViewModel(this.useCase);
 

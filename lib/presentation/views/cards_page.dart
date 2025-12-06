@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/card_viewmodel.dart';
+import '../../domain/entities/card.dart';
+import '../widgets/card_widget.dart';
+
+class CardsPage extends StatelessWidget {
+  const CardsPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = Provider.of<CardViewModel>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Colección de cartas"),
+        backgroundColor: Colors.blue[900],
+        foregroundColor: Colors.white,
+      ),
+
+      body: vm.loading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.70,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: vm.items.length,
+          itemBuilder: (_, i) {
+            final CardEntity c = vm.items[i];
+            return CardWidget(card: c);
+          },
+        ),
+      ),
+
+      bottomNavigationBar: null,
+    );
+  }
+}
