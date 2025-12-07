@@ -3,9 +3,12 @@ import 'package:provider/provider.dart';
 import '../viewmodels/card_viewmodel.dart';
 import '../../domain/entities/card.dart';
 import '../widgets/card_widget.dart';
+import '../widgets/shimmer_loading.dart';
+import '../widgets/fade_in_animation.dart';
+import '../widgets/custom_animations.dart';
 
 class CardsPage extends StatelessWidget {
-  const CardsPage({Key? key}) : super(key: key);
+  const CardsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,37 +16,65 @@ class CardsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Colección de cartas"),
+        title: const Text("Colección de cartas"),
         backgroundColor: Colors.blue[900],
         foregroundColor: Colors.white,
+        elevation: 4,
+        centerTitle: true,
       ),
-
       body: vm.loading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-        padding: EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.70,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: vm.items.length,
-          itemBuilder: (_, i) {
-            final CardEntity c = vm.items[i];
-            return CardWidget(card: c);
-          },
-        ),
-      ),
- //solo lo agregue para probar la navegacion, saludos
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Ver clanes',
-        backgroundColor: Colors.blue[900],
-        child: const Icon(Icons.group),
-        onPressed: () => Navigator.pushNamed(context, '/clans'),
-      ),
-
+          ? const ShimmerGridLoading(
+              itemCount: 8,
+              crossAxisCount: 2,
+              aspectRatio: 0.70,
+            )
+          : vm.items.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.grid_on, size: 80, color: Colors.grey[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No hay cartas disponibles',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : FadeInAnimation(
+              duration: const Duration(milliseconds: 600),
+              slideUp: true,
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await vm.loadData();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.70,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                        ),
+                    itemCount: vm.items.length,
+                    itemBuilder: (_, i) {
+                      final CardEntity c = vm.items[i];
+                      return ScaleSwapAnimation(
+                        duration: Duration(milliseconds: 400 + (i * 100)),
+                        child: CardWidget(card: c),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }
